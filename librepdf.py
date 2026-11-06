@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 
 from libre2 import libredata, librepng
-import sys
+import sys, re
 
 #header line 
-header = "ethanak"
+header = "LibreView glucose"
 
 #accept blood pressure comments
 use_blood = True
 
-#standard meals in minutes oe None for default
-def_meals = [7*60, 14*60, 18*60+30]
+#default meals hours as string
+def_meals = "7:00,14:00,18:30"
 
 #create pdf instead of html
 create_pdf = True
@@ -111,8 +111,38 @@ rowtemp = [
     '<td colspan="2">%PA</td><td colspan="2">%PB</td>'
 ]
 
+def mkdefmeals(s):
+    
+    if not (r:=re.match(r'(\d:[0-5]\d),\s*(\d\d:[0-5]\d),\s*(\d\d:[0-5]\d)$',s)):
+        helpme()
+    hrs=[]
+    for g in r.groups():
+        g=g.split(':')
+        g=int(g[1]) + 60 * int(g[0])
+        hrs.append(g)
+    return hrs
+        
+    
+    
 
-data=libredata.libredata(sys.argv[1], use_blood, def_meals)
+
+args=sys.argv[1:]
+import getopt
+optlist, args = getopt.getopt(args,'h:d:b:p:')
+optlist=dict(optlist)
+header = optlist.get('-h', header)
+def_meals = optlist.get('-d', def_meals)
+def_meals=mkdefmeals(def_meals)
+
+if (bld := optlist.get('-b')) is not None:
+    bld=bld[0].lower()
+    if bld not in ('t','f'):
+        helpme()
+    use_blood = (bld == 't')
+    
+
+print(optlist)
+data=libredata.libredata(args[0], use_blood, def_meals)
 data.readCSV()
 data.mkdata()
 

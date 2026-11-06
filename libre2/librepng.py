@@ -26,7 +26,7 @@ class librepic(object):
         self.im = Image.new('L',(self.width, self.height), 255)
         self.draw=ImageDraw.Draw(self.im)
         self.scale = self.height / 340
-        self.draw.rectangle([(0,self.ypos(80)),(self.width-1,self.height)], fill=200)
+        self.draw.rectangle([(0,self.ypos(70)),(self.width-1,self.height)], fill=200)
         self.draw.rectangle([(0,0),(self.width-1,self.ypos(180))], fill=200)
         self.draw.rectangle([(0,0),(self.width-1,self.ypos(240))], fill=160)
         for m in self.meal:
@@ -56,13 +56,3 @@ class librepic(object):
         self.im.save(b, format='PNG')
         bb = base64.b64encode(b.getvalue()).decode('ascii')
         return "data:image/png;base64,"+bb
-
-if __name__ == '__main__':
-    #pic=librepic(None, [7*60, 13*60, 17*60])
-    print(linesplit(
-        [(0,),(15,),(30,),(80,),(90,)]))
-
-
-    
-
-    

@@ -28,7 +28,6 @@ class libredata(object):
                 if len(fdic[typ]) == 0 or ti > fdic[typ][-1][0]:
                     if typ == '6':
                         if (blo := self.isblood(a[13])) is not None:
-                            #print(blo)
                             fdic[typ].append([ti, blo])
                         continue
                     ct=int(a[4] if typ == '0' else a[5] if typ == '1' else '1')
@@ -85,7 +84,7 @@ class libredata(object):
                 self.mdict[dag] = []
                 self.bdict[dag] = []
             self.ddict[dag].append([mnt,int(g[1])])
-        #self.dlist.sort() # should be soered?
+        #self.dlist.sort() # key needed?
         llen = len(self.dlist)
         if llen > self.__class__.period:
             rmv  = self.dlist[:llen-self.__class__.period]
@@ -153,12 +152,3 @@ class libredata(object):
                 return p[1]
         return 0
                 
-
-    
-        
-
-if __name__ == "__main__":
-    lr=libredata(sys.argv[1])
-    lr.readCSV()
-    lr.mkdata()
-
